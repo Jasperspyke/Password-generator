@@ -1,9 +1,15 @@
-import random
 import sys
-dict={}
-wordchoices='cool,nondescript,shoe,victorious,uptight,guiltless,relate,peaceful,soggy,nifty,birds,roll,drink,accurate,rend,course,throat,nurse,rind,productive,horrible,shiny,tame,typical,fluffy'
+import random
+
+#Initializes password dictionary from pre-existing password file. If not present, initializes placeholder dictionary
+try:
+    old_dict = eval(str(open('PSW.txt','r').read()))
+except SyntaxError:
+    old_dict = {'Foo': 'Bar'}
+wordchoices='cool,nondescript,shoe,gangster,victorious,uptight,guiltless,relate,peaceful,soggy,nifty,birds,roll,drink,accurate,rend,course,throat,nurse,rind,productive,horrible,shiny,tame,typical,fluffy'
 words=wordchoices.split(',')
 
+#The attributes of the password will include special characters, letters of different cases, and numbers. The passwords will be very strong 
 characters='!@#$%^&*()'
 splitchar=[char for char in characters]
 numbers='1234567890'
@@ -24,30 +30,36 @@ class password:
         characters=[random.choice(splitchar) for i in range (1,5)]
         characters=''.join(characters)
 
-        pw=string1+string2+numbers+characters
-        if service not in dict:
-            dict[servicestring]=pw
-            print(f'Your password for {servicestring} is {pw}')
-        else:
-            print('Password already created for this service!')
-            sys.exit()
-print('Type exit to exit without saving and save to exit and save dictionary of passwords.')
-while True:
+        pw=string1.upper()+string2+numbers+characters
+
+        return pw
+
+
+#The main function takes input from the user of what service to create a password for
+def main():
+    global old_dict
+    print('Type exit to exit without saving. Otherwise, type the name of the service to create password for')
     service=input('What service would you like to create a password for:'  )
     servicestring=str(service)
     if servicestring.lower()=='exit':
         print('cancelling program')
         sys.exit()
 
-    elif servicestring.lower()=='save':
+    elif servicestring in old_dict.keys():
+        service = password(service)
+        old_dict[servicestring] = service.createpw(service)
+        print('dictionary rewritten with new value')
 
-        with open('PSW.txt','a') as file:
-            file.write(str(dict))
-            print('Password dictionary successfully saved')
-            print(dict)
-            sys.exit()
     else:
-        service=password(service)
-        service.createpw(service)
+        service = password(service)
+        old_dict[servicestring] = service.createpw(service)
+        print('new password created')
+#This step is necessary to delete the placeholder so "foo: bar" does not appear in password list 
+    if 'Foo' in old_dict.keys():
+        del old_dict['Foo']
 
+    with open('PSW.txt', 'w') as f:
 
+        f = f.write(str(old_dict))
+        print('done')
+main()
