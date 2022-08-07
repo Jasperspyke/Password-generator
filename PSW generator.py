@@ -61,6 +61,6 @@ def main():
 
         f = f.write(str(old_dict))
         print('done')
-
-
-main()
+        
+ if __name__ == "__main__":
+    main()
