@@ -46,9 +46,13 @@ def main():
         sys.exit()
 
     elif servicestring in old_dict.keys():
-        service = Password(service)
-        old_dict[servicestring] = service.createpw()
-        print('dictionary rewritten with new value')
+        yes_or_no = str(input('there is a pre-existing password for this program. Rewrite it? Yes or no: '))
+        if yes_or_no.lower == 'yes':
+            service = Password(service)
+            old_dict[servicestring] = service.createpw()]
+            print('dictionary rewritten with new value')
+        else:
+            sys.exit()
 
     else:
         service = Password(service)
